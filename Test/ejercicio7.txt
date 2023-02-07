@@ -1,0 +1,27 @@
+7. Dadas las siguientes tablas:
+
+		users
+		=======
+		userID (PK)
+		name
+		
+		payments
+		========
+		paymentID (PK)
+		userID    (FK)
+		amount
+		payDate
+
+   Escribe la consulta necesaria para sacar el nombre de todos los usuarios que 
+   han pagado hoy.
+
+
+/* -------------------- */
+
+
+	SELECT DISTINCT u.name 
+	FROM
+	   users u, payments p
+	WHERE
+	   u.USERID = p.USERID 
+	   and DATE(p.payDate) = DATE(NOW());

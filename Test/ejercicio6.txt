@@ -1,0 +1,112 @@
+6. Detalla qué estructura de tablas MySQL utilizarías para montar un sistema 
+   de mensajería común entre usuarios y las consultas SQL necesarias para sacar 
+   la bandeja de entrada y la bandeja de salida de un usuario.
+   
+   
+/* -------------------- */
+
+   
+-------------------------
+ESTRUCTURA  >>> no defino los tipos pues debería discutirse al respecto. 
+                P.ej: desconozco el formato de idUsuario deseado y podria ser 
+                numérico(auto), alfanumerico(USR-2015-PREMIUM002)
+   
+   USUARIO (Tabla con datos relacionados con el perfil del usuario)
+   ----
+     idUsuario (PK) // id unico
+     nombreUsuario // nick de usuario que se muestra a sus contactos
+   
+   CONTACTOS (Tabla con contactos del usuario)
+   ----
+     idUsuario (FK) // viene de USUARIO
+     idContacto (FK) // viene de USUARIO
+     >> PK (idUsuario + idContacto) // A tiene a B una única vez
+   
+   MENSAJES
+   ---
+     idEmisor (FK) // viene de USUARIO
+     idDestino (FK) // viene de USUARIO
+     contenido // texto del mensaje
+     estado // 0:pendiente, 1:tramitado
+     fecha // fecha,hora del envio-recepcion     
+     >> PK (idUsuario + idDestino + fecha) // A a B en momento exacto único
+     
+     
+Siguiendo con lo descrito en esEnvio como ejemplo y dando estos valores por 
+buenos se obtienen las siguiente consultas. Se busca en mensajes. TODO son 
+mensajes pero dependerá de si se busca en emisor o en receptor será una bandeja 
+u otra. Se usa estado para comprobar situación teniendo los siguientes casos:
+
+   envio con estado 0 - pendiente de enviarse (bandeja de salida)
+   envio con estado 1 - ya enviado (bandeja de enviados)
+   entrante con estado 0 - pendiente de envio (en zona de cliente/servidor)
+   entrante con estado 1 - pendiente de lectura (bandeja de entrada)
+
+Supongamos lo siguientes datos:
+
++------------+------------+-----------------+--------+------------+
+| idemisor   | iddestino  | contenido       | estado | fecha      |
++------------+------------+-----------------+--------+------------+
+
+| idusuario1 | idusuario2 | primeroEnvio    | 1      | 2015-11-20 |
+| idusuario1 | idusuario2 | segundoEnvio    | 1      | 2015-11-20 |
+| idusuario1 | idusuario3 | primeroEnvioa3  | 0      | 2015-11-20 |
+
+| idusuario2 | idusuario1 | RespuestaEnvi21 | 0      | 2015-11-20 |
+| idusuario2 | idusuario1 | RespuestaEnvi22 | 0      | 2015-11-20 |
+| idusuario3 | idusuario1 | RespuestaEnvio3 | 1      | 2015-11-20 |
+
++------------+------------+-----------------+--------+------------+
+
+Los tres primeros son envios de idusuario1 de los cuales 2 están en su bandeja
+de enviados (y en la bandeja de entrada de idusuario2) y uno en su bandeja de 
+salida (y no hay constancia de acción para idusuario3 porque aún no se ha 
+enviado)
+
+Los tres siguientes son respuestas que ha tenido idusuario1 siendo los dos
+primeros mensajes aún por entrarle a su bandeja (sigue en la bandeja de salida 
+de idusuario2) y el último ya disponible en su bandeja de entrada (y en la 
+bandeja de enviados de idusuario3)
+
+   
+-------------------------
+BANDEJA DE SALIDA  
+>>> Sustituir :idUsuarioDeseado por el id del usuario que se desea obtener
+     
+	   
+SELECT
+      m.idemisor, 
+      u.nombreusuario, 
+      m.iddestino, 
+      (select usr.nombreusuario from usuario usr where m.iddestino = usr.idusuario) receptor, 
+      m.fecha, 
+      m.estado, 
+      m.contenido 
+   FROM
+      usuario u,
+      mensajes m
+   WHERE
+      u.idusuario = :idUsuarioDeseado
+      and u.idusuario = m.idEmisor
+      and estado = 0;
+
+	   
+-------------------------
+BANDEJA DE ENTRADA  
+>>> Sustituir :idUsuarioDeseado por el id del usuario que se desea obtener
+
+SELECT
+      m.idemisor, 
+      u.nombreusuario, 
+      m.iddestino, 
+      (select usr.nombreusuario from usuario usr where m.iddestino = usr.idusuario) receptor, 
+      m.fecha, 
+      m.estado, 
+      m.contenido 
+   FROM
+      usuario u,
+      mensajes m
+   WHERE
+      u.idusuario = :idUsuarioDeseado
+      and u.idusuario = m.iddestino
+      and estado = 1;

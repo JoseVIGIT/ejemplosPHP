@@ -1,0 +1,45 @@
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<style>
+	section#resultado {
+		border: 1px solid black;
+		display: none;
+		padding: 20px;
+	}
+	</style>
+</head>
+<body>
+
+	<section id="menu">
+		<a onclick="llamadaJSON ('verTodo');" href="#controladorJSON.php?accion=verTodo">Listar todo</a><br>
+		<a onclick="llamadaJSON ('verUsuario', 'Usuario1');" href="#controladorJSON.php?accion=verUsuario&datos[:usuario]=Usuario1">Listar Usuario1</a><br>
+		<a onclick="llamadaJSON ('insert')" href="#controladorJSON.php?accion=insert">Insertar Usuario9</a><br>
+		<a onclick="llamadaJSON ('update')" href="#controladorJSON.php?accion=update">Actualizar Usuario9 a Usuario10</a><br>
+		<a onclick="llamadaJSON ('delete')" href="#controladorJSON.php?accion=delete">Eliminar Usuario10</a><br>		
+	</section>
+	<p>RESULTADO:</p>
+	<section id="resultado">
+	</section>
+	<br />
+	<a href="index.html">Volver al indice principal</a>
+	
+	<script>
+	function llamadaJSON (accion, usr) 
+	{	
+		dat = {};		
+		if( usr != undefined)
+			dat[":usuario"] = usr;
+		$.ajax({ 
+	        type: "GET",
+	        //dataType: "json",
+	        data: {accion: accion, datos : dat},
+	        url: "http://localhost/test/PHPPDO/controladorJSON.php",
+	        success: function(data){  
+	        	$("#resultado").empty ();
+	        	$("#resultado").append (data);
+	        	$("#resultado").show ();
+	        }
+	    })
+	}	
+	</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+8. Partiendo de la misma estructura del ejercicio 7, escribe la consulta SQL 
+   necesaria que nos devuelva el nombre de los usuarios y la cantidad gastada, 
+   de aquellos usuarios que han gastado más de 100€ este mes.
+ 
+ 
+/* -------------------- */
+
+
+   Sólo se suman los valores del mes en curso y caso de ser mayores se muestra
+   el dato. Si un usuario hubiera además realizado pagos meses anteriores, 
+   estos no se tienen en cuenta puesto que se pide el total del mes en curso
+
+
+	SELECT u.userid, SUM(amount) 
+	FROM
+	   users u, payments p 
+	WHERE
+	   u.userid = p.userid 
+	   and MONTH(payDate) = MONTH(NOW()) 
+	   and YEAR(payDate) = YEAR(NOW())
+	GROUP BY u.userid
+	HAVING SUM(amount) > 100;

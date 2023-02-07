@@ -1,0 +1,88 @@
+1. Escribe el código necesario para mostrar por pantalla los elementos del array $a ordenados de mayor a menor y sin elementos repetidos.
+
+$a = array(2, 1, 1, 0, 5, 3, 2, 1, 4, 4, 2, 5);
+
+El resultado debería ser: array(5, 4, 3, 2, 1, 0);
+
+2. Suponiendo que existe una base de datos 'test' con una tabla 'users' con los campos 'userID', 'name', 'country' y 'credits', escribe el código necesario para exportar la tabla a un fichero XML con el siguiente formato:
+
+<xml>
+<users>
+    <user>
+        <userID>userID1</userID>
+	<name>name1</name>
+        <country>country1</country>
+        <credits>credits1</credits>
+    </user>
+    ...
+    <user>
+        <userID>userIDN</userID>
+	<name>nameN</name>
+        <country>countryN</country>
+        <credits>creditsN</credits>
+    </user>
+</users>
+</xml>
+
+3. Escribe el código necesario para parsear el XML del ejercicio anterior y mostrar el contenido en forma de array por pantalla.
+
+4. Suponiendo que el fichero ejer4.txt contiene una línea para cada uno de los mails que se han enviado en un sistema con todos los campos necesarios, escribe el código que inserte esos mails en la tabla 'emails'. La tabla emails tiene los siguientes campos: 'id' (autoincrement), 'sender', 'receiver', 'subject', 'body' y 'status'.
+
+5. Escribe el código necesario para recorrer la estructura de directorios de ejer5 y que muestre por pantalla un array con todos los ficheros (no los directorios) que se encuentran en ella.
+
+[tvilar@amidala ejer5]$ tree .
+.
+├── bar.txt
+├── foo
+│   └── bar
+│       └── foo
+│           ├── bar.txt
+│           ├── foo
+│           └── foo.txt
+└── foo.txt
+
+El resultado debería ser algo como:
+
+array(
+    0 => 'bar.txt',
+    1 => 'foo/bar/foo/bar.txt',
+    2 => 'foo/bar/foo/foo.txt',
+    3 => 'foo.txt'
+)
+
+El orden no importa, puesto que dependerá de la forma en que se recorran los directorios.
+
+6. Detalla qué estructura de tablas MySQL utilizarías para montar un sistema de mensajería común entre usuarios y las consultas SQL necesarias para sacar la bandeja de entrada y la bandeja de salida de un usuario.
+
+7. Dadas las siguientes tablas:
+
+users
+=======
+userID (PK)
+name
+
+payments
+========
+paymentID (PK)
+userID    (FK)
+amount
+payDate
+
+Escribe la consulta necesaria para sacar el nombre de todos los usuarios que han pagado hoy.
+
+8. Partiendo de la misma estructura del ejercicio 7, escribe la consulta SQL necesaria que nos devuelva el nombre de los usuarios y la cantidad gastada, de aquellos usuarios que han gastado más de 100€ este mes.
+
+9. Escribe un método (en el lenguaje de programación que prefieras, o en pseudocódigo) que devuelva cierto si el número que se le pasa como parámetro es potencia de 2.
+
+esPotenciaDe2(4) => TRUE
+esPotenciaDe2(5) => FALSE
+esPotenciaDe2(1024) => TRUE
+
+
+
+
+
+	
+
+
+

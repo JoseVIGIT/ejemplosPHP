@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+	<title>Insert title here</title>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<style>
+	section#resultado {
+		border: 1px solid black;
+		display: none;
+		padding: 20px;
+	}
+	</style>
+</head>
+<body>
+
+	<section id="menu">
+		<a onclick="llamadaREST('GET');" href="#REST/ver/">Listar todo</a><br>
+		<a onclick="llamadaREST('GET', 'Usuario1');" href="#REST/ver/Usuario1">Listar Usuario1</a><br>
+		<a onclick="llamadaREST('POST')" href="#REST/insert/">Insertar Usuario9</a><br>
+		<a onclick="llamadaREST('PUT')" href="#REST/update/">Actualizar Usuario9 a Usuario10</a><br>
+		<a onclick="llamadaREST('DELETE')" href="#REST/delete/">Eliminar Usuario10</a><br>		
+	</section>
+	<p>RESULTADO:</p>
+	<section id="resultado">
+	</section>
+	<br />
+	<a href="index.html">Volver al indice principal</a>
+
+	<script>
+	function llamadaREST(metodo, usr, pwd) 
+	{	
+		dat = {};
+		
+		// si se enviara como JSON
+		// dat[":usuario"] = usr;
+		
+		// si se envia como XML
+		if (usr != undefined) {
+			dat =  "<xml>";
+			dat +=   "<socio>";		
+			dat +=      "<usuario>" +usr+ "</usuario>";
+			dat +=      "<contrasena>" +pwd+ "</contrasena>";
+			dat +=   "</socio>"
+			dat += "</xml>";
+		}
+		
+		$.ajax({ 
+	        type: metodo,	        
+	        contentType: "text/xml", // Tipo de datos enviados
+            //dataType: "xml", // Tipo de datos recibidos
+            dataType: "html",
+	        data: {datos : dat},
+	        url: "http://localhost/test/PHPPDO/REST/",
+	        success: function(data){  
+	        	$("#resultado").empty ();
+	        	$("#resultado").append (data);
+	        	$("#resultado").show ();
+	        }
+	    })
+	}	
+	</script>
+
+</body>
+</html>

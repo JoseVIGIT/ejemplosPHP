@@ -1,0 +1,3 @@
+sender:mario#receiver:luigi#subject:SOS!#body:Luigi, te necesito "ahora mismico".#status:1
+sender:robin#receiver:batman#subject:Todo bien?#body:Hace tiempo que no sé de tí. Todo 'ok'?.#status:2
+sender:rambo#receiver:truman#subject:Dios mío#body:No me siento las piernas!#status:2
